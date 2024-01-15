@@ -1,0 +1,35 @@
+version: '3.0'
+
+services:
+
+  web:
+    build: .
+    tty: true
+    restart: always
+    volumes:
+      - .:/code
+    env_file:
+      - .env
+    command: bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8001'
+    ports:
+      - '8000:8001'
+
+  redis:
+    image: redis:latest
+    ports:
+      - '6379:6379'
+    depends_on:
+      - web
+
+  celery:
+    build: .
+    tty: true
+    restart: always
+    volumes:
+      - .:/code
+    command: celery -A config worker -l info --pool=solo
+    depends_on:
+      - redis
+
+volumes:
+  pg_data:
