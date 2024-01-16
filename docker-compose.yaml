@@ -9,7 +9,7 @@ services:
     volumes:
       - .:/code
     env_file:
-      - .env
+      - .docker.env
     command: bash -c 'python manage.py migrate && python manage.py runserver 0.0.0.0:8001'
     ports:
       - '8000:8001'
@@ -27,6 +27,8 @@ services:
     restart: always
     volumes:
       - .:/code
+    env_file:
+      - .docker.env
     command: celery -A config worker -l info --pool=solo
     depends_on:
       - redis

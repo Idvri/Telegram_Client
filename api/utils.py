@@ -8,6 +8,7 @@ from api.models import User
 
 async def get_qr(client: TelegramClient) -> QRLogin:
     """Функция для получения QR-кода."""
+
     qr = await client.qr_login()
     return qr
 
@@ -46,6 +47,7 @@ def login_status_update(phone: int, status: str, telegram_id: str = None) -> Non
 @sync_to_async
 def set_qr_to_user(phone: int, qr_link: str) -> None:
     """Функция для сохранения ссылки QR-кода в БД, в контексте асинхронной функции."""
+
     db_user = User.objects.filter(phone=phone).first()
     db_user.qr_link = qr_link
     db_user.save()
